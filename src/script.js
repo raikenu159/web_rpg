@@ -17,6 +17,9 @@ const monsterStats = document.querySelector("#monsterStats");
 const monsterName = document.querySelector("#monsterName");
 const monsterHealthText = document.querySelector("#monsterHealth");
 
+const locationImg = document.querySelector("#locationImg");
+const enemyImg = document.querySelector("#enemyImg");
+
 const weapons = [
   { name: 'stick', power: 5 },
   { name: 'dagger', power: 30 },
@@ -27,17 +30,20 @@ const monsters = [
   {
     name: "slime",
     level: 2,
-    health: 15
+    health: 15,
+    img: "../assets/slime.webp"
   },
   {
     name: "fanged beast",
     level: 8,
-    health: 60
+    health: 60,
+    img: "../assets/fangedBeast.jpg"
   },
   {
     name: "dragon",
     level: 20,
-    health: 300
+    health: 300,
+    img: "../assets/dragon.jpg"
   }
 ]
 const locations = [
@@ -45,19 +51,22 @@ const locations = [
     name: "town square",
     "button text": ["Go to store", "Go to cave", "Fight dragon"],
     "button functions": [goStore, goCave, fightDragon],
-    text: "You are in the town square. You see a sign that says \"Store\"."
+    text: "You are in the town square. You see a sign that says \"Store\".",
+    img: "../assets/town_square.jpg"
   },
   {
     name: "store",
     "button text": ["Buy 10 health (10 gold)", "Buy weapon (30 gold)", "Go to town square"],
     "button functions": [buyHealth, buyWeapon, goTown],
-    text: "You enter the store."
+    text: "You enter the store.",
+    img: "../assets/store.jpg"
   },
   {
     name: "cave",
     "button text": ["Fight slime", "Fight fanged beast", "Go to town square"],
     "button functions": [fightSlime, fightBeast, goTown],
-    text: "You enter the cave. You see some monsters."
+    text: "You enter the cave. You see some monsters.",
+    img: "../assets/cave.jpg"
   },
   {
     name: "fight",
@@ -91,6 +100,8 @@ const locations = [
   }
 ];
 
+
+
 // initialize buttons
 button1.onclick = goStore;
 button2.onclick = goCave;
@@ -105,10 +116,17 @@ function update(location) {
   button2.onclick = location["button functions"][1];
   button3.onclick = location["button functions"][2];
   text.innerHTML = location.text;
+
+  if ("img" in location) {
+    locationImg.src = location.img;
+  }
 }
 
 function goTown() {
   update(locations[0]);
+  if (enemyImg.style.display === "inline") {
+    enemyImg.style.display = "none";
+  }
 }
 
 function goStore() {
@@ -183,6 +201,13 @@ function goFight() {
   monsterStats.style.display = "block";
   monsterName.innerText = monsters[fighting].name;
   monsterHealthText.innerText = monsterHealth;
+
+  if ( "img" in monsters[fighting]) {
+    enemyImg.src = monsters[fighting].img;
+    enemyImg.style.display = "inline";
+    console.log(monsters[fighting].img);
+    console.log(enemyImg.src, enemyImg.display);
+  }
 }
 
 function attack() {
@@ -231,6 +256,7 @@ function defeatMonster() {
   goldText.innerText = gold;
   xpText.innerText = xp;
   update(locations[4]);
+  enemyImg.style.display = "none";
 }
 
 function lose() {
